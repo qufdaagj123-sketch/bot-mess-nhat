@@ -1,11 +1,11 @@
 {
-  "name": "bot-mess-nhat",
+  "name": "email-bot-nhat",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "fca-unofficial": "latest"
+    "nodemailer": "^6.9.13"
   }
 }
