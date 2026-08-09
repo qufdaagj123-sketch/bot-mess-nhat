@@ -1,6 +1,5 @@
 const login = require("fca-unofficial");
 
-// Lấy cookie từ biến môi trường (sẽ thiết lập trên Render)
 const appState = JSON.parse(process.env.APPSTATE);
 
 login({ appState }, (err, api) => {
@@ -11,7 +10,7 @@ login({ appState }, (err, api) => {
     api.listenMqtt((err, event) => {
         if (err) return console.error(err);
 
-        // Chào mừng khi được thêm vào nhóm
+        // Chào mừng khi được thêm vào nhóm (không cần trích dẫn tin nhắn vì là sự kiện nhóm)
         if (event.type === "event" && event.logMessageType === "log:subscribe") {
             const addedParticipants = event.logMessageData.addedParticipants;
             addedParticipants.forEach(participant => {
@@ -21,9 +20,10 @@ login({ appState }, (err, api) => {
             });
         }
 
-        // Chào mừng khi ai đó nhắn tin riêng (ví dụ gõ "hi")
+        // Trả lời tin nhắn riêng có kèm khung trích dẫn (reply)
         if (event.type === "message" && event.body && event.body.toLowerCase() === "hi") {
-            api.sendMessage("👋 Chào bạn! Mình là bot tự động, bạn cần giúp gì không?", event.threadID);
+            // Thêm event.messageID ở cuối để bot tự động quote lại tin nhắn của người dùng
+            api.sendMessage("👋 Chào bạn! Mình là bot tự động, bạn cần giúp gì không?", event.threadID, event.messageID);
         }
     });
 });
